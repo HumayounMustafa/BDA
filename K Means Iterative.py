@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+#Run this command in terminal python kmeans_hadoop.py to run it.
 import sys
 import random
 
