@@ -1,0 +1,18 @@
+from kafka import KafkaConsumer
+from hdfs import InsecureClient
+
+consumer = KafkaConsumer('test-topic', bootstrap_servers=['localhost:9092'])
+hdfs_path = '/BitCoinData/bit_coin.txt'
+
+# Connect to HDFS client
+client = InsecureClient('http://localhost:9870')
+
+# Create file if it does not exist
+if not client.status(hdfs_path, strict=False):
+    client.write(hdfs_path, '')
+
+for message in consumer:
+    values = message.value.decode('utf-8')
+    with client.write(hdfs_path, append=True, encoding='utf-8') as f:
+        print(message.value)
+        f.write(f"{values}\n")
