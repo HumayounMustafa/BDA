@@ -1,0 +1,18 @@
+import kafka
+from time import sleep
+import requests
+import json
+
+# API Endpoint
+url = 'https://api.coinbase.com/v2/prices/btc-usd/spot'
+
+# Producing as JSON
+producer = kafka.KafkaProducer(bootstrap_servers=['localhost:9092'],
+                               value_serializer=lambda m: json.dumps(m).encode('ascii'))
+
+while True:
+    sleep(2)
+    price = ((requests.get(url)).json())
+    print("Price fetched")
+    producer.send('test-topic', price)
+    print("Price sent to consumer")
